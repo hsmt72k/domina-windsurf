@@ -195,7 +195,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-3 w-3 p-0 hover:bg-transparent hover:cursor-pointer"
+                  className="h-3 w-3 p-0 hover:bg-destructive/10 hover:text-destructive text-muted-foreground/50 hover:cursor-pointer rounded-full transition-colors"
                   onClick={() => handleRemoveTld(tld)}
                 >
                   <X className="h-3 w-3" />

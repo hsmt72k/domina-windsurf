@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_JP } from 'next/font/google'
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -12,6 +13,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  display: 'swap',
+  variable: '--font-noto-sans-jp',
+})
 
 export const metadata: Metadata = {
   title: "Domina - ドメイン名チェックツール",
@@ -26,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} font-sans antialiased`}
       >
         {children}
         <Toaster />

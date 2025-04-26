@@ -342,7 +342,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-4 w-4 p-0 hover:bg-transparent hover:cursor-pointer ml-1"
+                          className="h-4 w-4 p-0 hover:bg-destructive/10 hover:text-destructive text-muted-foreground/50 hover:cursor-pointer rounded-full ml-1 transition-colors"
                           onClick={() => removeBaseName(baseName.id)}
                         >
                           <X className="h-3.5 w-3.5" />
