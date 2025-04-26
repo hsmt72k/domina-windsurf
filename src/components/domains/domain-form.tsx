@@ -202,17 +202,21 @@ export function DomainForm({ onResults }: DomainFormProps) {
           <div className="p-3 mt-2 bg-muted/50 rounded-md">
             <h3 className="text-xs font-medium mb-1.5">ドメイン名の提案</h3>
             <div className="flex flex-wrap gap-1.5">
-              {suggestions.map((suggestion, idx) => (
-                <Button
-                  key={idx}
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => selectSuggestion(suggestion)}
-                  className="h-7 px-2"
-                >
-                  {suggestion}
-                </Button>
-              ))}
+              {suggestions.map((suggestion, idx) => {
+                // ドメイン名からベース部分のみを抽出（TLDを除去）
+                const baseName = suggestion.split('.')[0];
+                return (
+                  <Button
+                    key={idx}
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => selectSuggestion(suggestion)}
+                    className="h-7 px-2"
+                  >
+                    {baseName}
+                  </Button>
+                );
+              })}
             </div>
           </div>
         )}
