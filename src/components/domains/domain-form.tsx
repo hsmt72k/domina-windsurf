@@ -19,9 +19,8 @@ import {
 import { TldModal } from './tld-modal'
 import { DomainStatus, BaseNameTag } from '@/types/domain'
 import { toast } from 'sonner'
-import { Loader2, Lightbulb, X, Plus } from 'lucide-react'
+import { Loader2, X, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { z } from 'zod'
 
 interface DomainFormProps {
   onResults: (results: DomainStatus[]) => void
@@ -132,191 +131,199 @@ export function DomainForm({ onResults }: DomainFormProps) {
   // ベース名をバリデーションして追加
   const addBaseName = (baseName: string) => {
     try {
-      // ベース名のバリデーション
-      const validatedBaseName = domainBaseNameSchema.parse(baseName)
-
-      // 重複チェック
-      if (baseNames.some((b) => b.value === validatedBaseName)) {
-        toast.error('このドメイン名は既に追加されています')
+      // 入力値のバリデーション
+      const validateResult = domainBaseNameSchema.safeParse(baseName)
+      if (!validateResult.success) {
+        toast.error('英数字とハイフンのみ使用できます')
         return
       }
 
-      // 新しいベース名をタグとして追加
-      const newBaseName: BaseNameTag = {
-        id: `basename-${Date.now()}`,
-        value: validatedBaseName,
+      // 重複チェック
+      if (baseNames.some((item) => item.value === baseName)) {
+        toast.error('同じドメイン名が既に追加されています')
+        return
       }
 
-      setBaseNames([...baseNames, newBaseName])
-      setBaseNameInput('') // 入力フィールドをクリア
-      toast.success(`「${validatedBaseName}」を追加しました`)
+      // ベース名をタグとして追加
+      setBaseNames((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          value: baseName,
+        },
+      ])
+
+      // 入力フィールドをクリア
+      setBaseNameInput('')
+      baseNameInputRef.current?.focus()
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast.error(error.errors[0].message || '無効なドメイン名です')
-      } else {
-        toast.error('ドメイン名の追加に失敗しました')
-      }
+      console.error('Error adding baseName:', error)
+      toast.error('ドメイン名の追加に失敗しました')
     }
   }
 
   // ベース名タグを削除
   const removeBaseName = (id: string) => {
-    setBaseNames(baseNames.filter((b) => b.id !== id))
+    setBaseNames((prev) => prev.filter((tag) => tag.id !== id))
   }
 
   return (
-    <div className="space-y-4">
-      {/* ビジネスアイデア入力（ドメイン提案用） */}
-      <div>
-        <div className="flex gap-2 items-start">
-          <div className="flex-1 space-y-1">
-            <div className="text-sm font-medium flex items-center gap-1.5">
-              <Lightbulb className="h-4 w-4 text-yellow-500" />
-              ビジネスアイデアを入力
-            </div>
-            <Input
-              placeholder="例: オンライン料理教室を提供するサービス"
-              value={businessIdea}
-              onChange={(e) => setBusinessIdea(e.target.value)}
-            />
-          </div>
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={generateSuggestions}
-            disabled={isGeneratingSuggestions || !businessIdea.trim()}
-            className="hover:cursor-pointer mt-6"
-          >
-            {isGeneratingSuggestions ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                生成中
-              </>
-            ) : (
-              '提案'
-            )}
-          </Button>
-        </div>
-
-        {/* 提案結果表示 */}
-        {suggestions.length > 0 && (
-          <div className="p-3 mt-2 bg-muted/50 rounded-md">
-            <h3 className="text-xs font-medium mb-1.5">ドメイン名の提案</h3>
-            <div className="flex flex-wrap gap-1.5">
-              {suggestions.map((suggestion, idx) => {
-                // ドメイン名からベース部分のみを抽出（TLDを除去）
-                const baseName = suggestion.split('.')[0];
-                return (
-                  <Button
-                    key={idx}
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => selectSuggestion(suggestion)}
-                    className="h-7 px-2 hover:cursor-pointer"
-                  >
-                    {baseName}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* ドメイン検索フォーム */}
+    <div className="space-y-6">
+      {/* Form全体を包むFormコンポーネント */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* ベース名入力 */}
-          <div className="space-y-2">
-            <div className="text-sm font-medium">ドメイン名（ベース部分）</div>
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-2">
-                <Input
-                  ref={baseNameInputRef}
-                  placeholder="例: mycompany"
-                  value={baseNameInput}
-                  onChange={(e) => setBaseNameInput(e.target.value)}
-                  onKeyDown={handleBaseNameKeyDown}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="hover:cursor-pointer"
-                  onClick={() => {
-                    if (baseNameInput.trim()) {
-                      addBaseName(baseNameInput.trim())
-                    }
-                  }}
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  追加
-                </Button>
-              </div>
+        {/* グリッドレイアウト - AI提案と手動入力を横並びに */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* AI提案セクション */}
+          <div className="space-y-3">
+            <div className="text-sm font-medium">
+              ビジネスアイデアから AI提案
+            </div>
+            <div>
+              <Input
+                placeholder="例: オンライン料理教室サービス"
+                value={businessIdea}
+                onChange={(e) => setBusinessIdea(e.target.value)}
+              />
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={generateSuggestions}
+              disabled={isGeneratingSuggestions || !businessIdea.trim()}
+              className="hover:cursor-pointer w-full"
+            >
+              {isGeneratingSuggestions ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  生成中
+                </>
+              ) : (
+                'AIにドメイン名を提案してもらう'
+              )}
+            </Button>
 
-              {/* 追加したベース名のタグ表示 */}
-              {baseNames.length > 0 && (
+            {/* 提案結果表示 */}
+            {suggestions.length > 0 && (
+              <div className="p-3 bg-muted/50 rounded-md h-[calc(100%-132px)] min-h-[150px] overflow-y-auto">
+                <h3 className="text-xs font-medium mb-1.5">
+                  提案されたドメイン名
+                </h3>
                 <div className="flex flex-wrap gap-1.5">
-                  {baseNames.map((baseName) => (
-                    <Badge
-                      key={baseName.id}
-                      variant="secondary"
-                      className="flex items-center gap-1 h-6"
-                    >
-                      {baseName.value}
+                  {suggestions.map((suggestion, idx) => {
+                    // ドメイン名からベース部分のみを抽出（TLDを除去）
+                    const baseName = suggestion.split('.')[0]
+                    return (
                       <Button
-                        variant="ghost"
+                        key={idx}
+                        variant="secondary"
                         size="sm"
-                        className="h-3 w-3 p-0 hover:bg-transparent hover:cursor-pointer"
-                        onClick={() => removeBaseName(baseName.id)}
+                        onClick={() => selectSuggestion(suggestion)}
+                        className="h-7 px-2 hover:cursor-pointer"
                       >
-                        <X className="h-3 w-3" />
+                        {baseName}
                       </Button>
-                    </Badge>
-                  ))}
-                  {baseNames.length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs hover:cursor-pointer"
-                      onClick={() => setBaseNames([])}
-                    >
-                      クリア
-                    </Button>
-                  )}
+                    )
+                  })}
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* 手動入力セクション */}
+          <div className="space-y-3">
+            <div className="text-sm font-medium">ドメイン名を入力して追加</div>
+            <div className="flex gap-2">
+              <Input
+                ref={baseNameInputRef}
+                placeholder="例: mycompany"
+                value={baseNameInput}
+                onChange={(e) => setBaseNameInput(e.target.value)}
+                onKeyDown={handleBaseNameKeyDown}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="hover:cursor-pointer"
+                disabled={!baseNameInput.trim()}
+                onClick={() => addBaseName(baseNameInput.trim())}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                追加
+              </Button>
+            </div>
+
+            {/* 追加したベース名のタグ表示 */}
+            <div className="flex flex-wrap gap-1.5 min-h-[38px]">
+              {baseNames.map((baseName) => (
+                <Badge
+                  key={baseName.id}
+                  variant="secondary"
+                  className="flex items-center gap-1 h-6"
+                >
+                  {baseName.value}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-3 w-3 p-0 hover:bg-transparent hover:cursor-pointer"
+                    onClick={() => removeBaseName(baseName.id)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </Badge>
+              ))}
+              {baseNames.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs hover:cursor-pointer"
+                  onClick={() => setBaseNames([])}
+                >
+                  クリア
+                </Button>
               )}
             </div>
+
+            <div className="pt-2">
+              {/* TLD選択 */}
+              <FormField
+                control={form.control}
+                name="tlds"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <TldModal
+                        selectedTlds={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
+        </div>
 
-          <FormField
-            control={form.control}
-            name="tlds"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <TldModal
-                    selectedTlds={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit" className="w-full hover:cursor-pointer" disabled={isLoading}>
+        {/* ドメイン検索フォーム */}
+        <div className="mt-4 pt-4 border-t border-border">
+          <Button
+            type="submit"
+            onClick={form.handleSubmit(onSubmit)}
+            className="w-full hover:cursor-pointer"
+            disabled={isLoading}
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 チェック中...
               </>
             ) : (
-              'ドメイン可用性をチェック'
+              'ドメインが利用可能かどうかをチェック'
             )}
           </Button>
-        </form>
+        </div>
       </Form>
     </div>
   )
