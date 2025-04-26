@@ -22,6 +22,7 @@ interface TldModalProps {
 export function TldModal({ selectedTlds, onChange }: TldModalProps) {
   // モーダル内での選択状態を管理（モーダルを閉じるまで確定させない）
   const [tempSelectedTlds, setTempSelectedTlds] = useState<TLD[]>(selectedTlds)
+  const [open, setOpen] = useState(false)
 
   // TLDをカテゴリ別に整理
   const categories: Record<string, TLD[]> = {
@@ -36,6 +37,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
     if (open) {
       setTempSelectedTlds([...selectedTlds])
     }
+    setOpen(open)
   }
 
   // TLDの選択状態を変更
@@ -77,7 +79,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div className="text-sm font-medium">チェックするTLDを選択</div>
-        <Dialog onOpenChange={handleOpenChange}>
+        <Dialog open={open} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <Button
               variant="outline"
@@ -131,7 +133,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                           id={`modal-tld-${tld}`}
                           checked={tempSelectedTlds.includes(tld)}
                           onCheckedChange={(checked) =>
-                            handleTldChange(tld, checked as boolean)
+                            handleTldChange(tld, checked === true)
                           }
                         />
                         <Button
