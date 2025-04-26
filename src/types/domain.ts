@@ -13,3 +13,8 @@ export interface TLDOption {
   value: string;
   label: string;
 }
+
+export interface BaseNameTag {
+  id: string;
+  value: string;
+}

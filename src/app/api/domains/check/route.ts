@@ -1,35 +1,30 @@
 import { NextResponse } from "next/server";
-import { checkDomainSchema } from "@/schemas/domain";
 import { bulkCheckDomains } from "@/lib/whois";
-import { DomainStatus } from "@/types/domain";
+import { apiSchema } from "@/schemas/domain";
 
 export async function POST(request: Request) {
   try {
-    // リクエストボディの解析
     const body = await request.json();
     
-    // Zodによるバリデーション
-    const validatedData = checkDomainSchema.safeParse(body);
+    // バリデーション
+    const validatedData = apiSchema.parse(body);
+    const { baseNames, tlds } = validatedData;
     
-    if (!validatedData.success) {
-      return NextResponse.json(
-        { error: "無効なリクエスト", issues: validatedData.error.format() },
-        { status: 400 }
-      );
+    // 結果を格納する配列
+    const results = [];
+    
+    // ベース名とTLDの組み合わせをチェック
+    for (const baseName of baseNames) {
+      const batchResults = await bulkCheckDomains(baseName, tlds);
+      results.push(...batchResults);
     }
     
-    const { baseName, tlds } = validatedData.data;
-    
-    // 複数ドメインの一括チェック
-    const results: DomainStatus[] = await bulkCheckDomains(baseName, tlds);
-    
-    // 結果の返却
     return NextResponse.json({ results });
   } catch (error) {
     console.error("Domain check error:", error);
     return NextResponse.json(
-      { error: "ドメインチェック処理中にエラーが発生しました" },
-      { status: 500 }
+      { error: "ドメインの可用性チェックに失敗しました" },
+      { status: 400 }
     );
   }
 }
