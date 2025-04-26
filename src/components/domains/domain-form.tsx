@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { checkDomainSchema, supportedTlds } from "@/schemas/domain";
+import { checkDomainSchema } from "@/schemas/domain";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { TldSelector } from "./tld-selector";
+import { TldModal } from "./tld-modal";
 import { DomainStatus } from "@/types/domain";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -162,9 +162,8 @@ export function DomainForm({ onResults }: DomainFormProps) {
             name="tlds"
             render={({ field }) => (
               <FormItem>
-                <div className="text-sm font-medium">チェックするTLDを選択</div>
                 <FormControl>
-                  <TldSelector
+                  <TldModal
                     selectedTlds={field.value}
                     onChange={field.onChange}
                   />
