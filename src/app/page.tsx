@@ -5,12 +5,12 @@ import { DomainForm } from '@/components/domains/domain-form'
 import { DomainGrid } from '@/components/domains/domain-grid'
 import { DomainStatus } from '@/types/domain'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
 
 const Home = () => {
   const [results, setResults] = useState<DomainStatus[]>([])
   const [currentYear, setCurrentYear] = useState<number>(0)
   const [activeTab, setActiveTab] = useState<string>('input')
-  const preserveFormState = true
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear())
@@ -43,7 +43,12 @@ const Home = () => {
               入力フォーム
             </TabsTrigger>
             <TabsTrigger value="results" className="hover:cursor-pointer">
-              検索結果 {results.length > 0 && `(${results.length}件)`}
+              検索結果{' '}
+              {results.length > 0 && (
+                <Badge variant="secondary" className="ml-1.5 font-normal">
+                  {results.length}
+                </Badge>
+              )}
             </TabsTrigger>
           </TabsList>
 

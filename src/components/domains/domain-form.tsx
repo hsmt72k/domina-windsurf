@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent, useRef, useEffect } from 'react'
+import { KeyboardEvent, useRef, useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAtom } from 'jotai'
@@ -22,15 +22,15 @@ import { DomainStatus, BaseNameTag } from '@/types/domain'
 import { toast } from 'sonner'
 import { Loader2, X, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { 
-  baseNamesAtom, 
-  businessIdeaAtom, 
-  baseNameInputAtom, 
-  suggestionsAtom, 
-  tldsAtom, 
+import {
+  baseNamesAtom,
+  businessIdeaAtom,
+  baseNameInputAtom,
+  suggestionsAtom,
+  tldsAtom,
   resultsAtom,
   isLoadingAtom,
-  isGeneratingSuggestionsAtom
+  isGeneratingSuggestionsAtom,
 } from '@/store/domain-store'
 
 interface DomainFormProps {
@@ -41,15 +41,17 @@ export function DomainForm({ onResults }: DomainFormProps) {
   // Jotaiを使った状態管理
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
   const [businessIdea, setBusinessIdea] = useAtom(businessIdeaAtom)
-  const [isGeneratingSuggestions, setIsGeneratingSuggestions] = useAtom(isGeneratingSuggestionsAtom)
+  const [isGeneratingSuggestions, setIsGeneratingSuggestions] = useAtom(
+    isGeneratingSuggestionsAtom
+  )
   const [suggestions, setSuggestions] = useAtom(suggestionsAtom)
   const [baseNameInput, setBaseNameInput] = useAtom(baseNameInputAtom)
   const [baseNames, setBaseNames] = useAtom(baseNamesAtom)
   const [savedTlds, setSavedTlds] = useAtom(tldsAtom)
   const [, setResults] = useAtom(resultsAtom)
-  
+
   const baseNameInputRef = useRef<HTMLInputElement>(null)
-  
+
   // React Hook Formの設定
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -61,9 +63,13 @@ export function DomainForm({ onResults }: DomainFormProps) {
 
   // TLDの変更を監視して自動保存
   const watchedTlds = form.watch('tlds')
-  
+
   useEffect(() => {
-    if (watchedTlds && watchedTlds.length > 0 && JSON.stringify(watchedTlds) !== JSON.stringify(savedTlds)) {
+    if (
+      watchedTlds &&
+      watchedTlds.length > 0 &&
+      JSON.stringify(watchedTlds) !== JSON.stringify(savedTlds)
+    ) {
       setSavedTlds(watchedTlds)
     }
   }, [watchedTlds, savedTlds, setSavedTlds])
@@ -72,9 +78,9 @@ export function DomainForm({ onResults }: DomainFormProps) {
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     // ベース名のリストをフォームに設定
     data.baseNames = baseNames.map((tag) => tag.value)
-    
+
     console.log('フォーム送信前のデータ:', { formData: data, baseNames })
-    
+
     // ベース名もしくはTLDが一つもない場合はエラー
     if (data.baseNames.length === 0) {
       toast.error('少なくとも1つのドメイン名を入力してください')
@@ -104,13 +110,13 @@ export function DomainForm({ onResults }: DomainFormProps) {
       const result = await response.json()
       setResults(result.results)
       onResults(result.results)
-      
+
       console.log('フォーム送信後のデータ:', {
         formValues: form.getValues(),
-        baseNames
+        baseNames,
       })
     } catch (error) {
-      console.error("Error checking domains:", error)
+      console.error('Error checking domains:', error)
       toast.error('ドメインチェック中にエラーが発生しました')
     } finally {
       setIsLoading(false)
@@ -137,9 +143,9 @@ export function DomainForm({ onResults }: DomainFormProps) {
       }
 
       const data = await response.json()
-      const newSuggestions = data.suggestions || [];
-      setSuggestions(newSuggestions);
-      
+      const newSuggestions = data.suggestions || []
+      setSuggestions(newSuggestions)
+
       // JotaiでSuggestionsが自動的に保存されるので追加のコードは不要
     } catch (error) {
       console.error('Error generating suggestions:', error)
@@ -170,48 +176,48 @@ export function DomainForm({ onResults }: DomainFormProps) {
   const addBaseName = (baseName: string) => {
     try {
       // バリデーション
-      const validationResult = domainBaseNameSchema.safeParse(baseName);
+      const validationResult = domainBaseNameSchema.safeParse(baseName)
       if (!validationResult.success) {
         toast.error(
           validationResult.error.errors.length > 0
             ? validationResult.error.errors[0].message
             : 'ドメイン名が無効です'
-        );
-        return;
+        )
+        return
       }
 
-      const normalizedBaseName = baseName.toLowerCase().trim();
+      const normalizedBaseName = baseName.toLowerCase().trim()
 
       // 既に追加済みかチェック
       if (baseNames.some((tag) => tag.value === normalizedBaseName)) {
-        toast.info(`"${normalizedBaseName}" は既に追加されています`);
-        return;
+        toast.info(`"${normalizedBaseName}" は既に追加されています`)
+        return
       }
 
       // 新しいタグを追加
       const newTag: BaseNameTag = {
         id: crypto.randomUUID(),
         value: normalizedBaseName,
-      };
+      }
 
-      setBaseNames([...baseNames, newTag]);
-      setBaseNameInput('');
-      
+      setBaseNames([...baseNames, newTag])
+      setBaseNameInput('')
+
       // Jotaiが自動的に状態を保存するので追加のlocalStorage操作は不要
 
       // 入力欄にフォーカスを戻す
-      baseNameInputRef.current?.focus();
+      baseNameInputRef.current?.focus()
     } catch (error) {
-      console.error('Error adding base name:', error);
-      toast.error('ドメイン名の追加中にエラーが発生しました');
+      console.error('Error adding base name:', error)
+      toast.error('ドメイン名の追加中にエラーが発生しました')
     }
-  };
+  }
 
   // ベース名タグを削除
   const removeBaseName = (id: string) => {
-    setBaseNames(baseNames.filter((tag) => tag.id !== id));
+    setBaseNames(baseNames.filter((tag) => tag.id !== id))
     // Jotaiが自動的に状態を保存するので追加のlocalStorage操作は不要
-  };
+  }
 
   return (
     <div className="space-y-6">
