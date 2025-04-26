@@ -29,7 +29,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
     一般的: ['.com', '.net', '.org'],
     ビジネス: ['.co', '.biz', '.info'],
     テック: ['.io', '.dev', '.app', '.xyz'],
-    国別: ['.jp', '.me'],
+    国別: ['.jp', '.co.jp', '.me'],
   }
 
   // モーダルを開くときに現在の選択状態をロード
@@ -135,6 +135,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                           onCheckedChange={(checked) =>
                             handleTldChange(tld, checked === true)
                           }
+                          className="hover:cursor-pointer"
                         />
                         <Button
                           variant="ghost"
@@ -173,7 +174,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                     onClick={handleApply}
                     className="hover:cursor-pointer"
                   >
-                    適用 ({tempSelectedTlds.length})
+                    適用 <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0 h-4">{tempSelectedTlds.length}</Badge>
                   </Button>
                 </DialogClose>
               </div>

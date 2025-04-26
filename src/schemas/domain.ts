@@ -3,7 +3,7 @@ import { z } from "zod";
 // 一般的なTLDのリスト
 export const supportedTlds = [
   ".com", ".net", ".org", ".io", ".dev", ".app", 
-  ".co", ".me", ".info", ".biz", ".xyz", ".jp"
+  ".co", ".me", ".info", ".biz", ".xyz", ".jp", ".co.jp"
 ] as const;
 
 // TLD型の定義

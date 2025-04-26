@@ -167,7 +167,10 @@ export function DomainForm({ onResults }: DomainFormProps) {
   // ベース名を入力して追加するハンドラー
   const handleBaseNameKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      e.preventDefault() // フォーム送信を防止
+      e.stopPropagation() // イベントの伝播を停止
+
+      // 入力があれば追加処理
       if (baseNameInput.trim()) {
         addBaseName(baseNameInput.trim())
       }
@@ -177,6 +180,12 @@ export function DomainForm({ onResults }: DomainFormProps) {
   // ベース名をバリデーションして追加
   const addBaseName = (baseName: string) => {
     try {
+      // すでにTLDが含まれているかチェック
+      if (baseName.includes('.')) {
+        toast.error('TLDを含めないドメイン名のベース部分のみを入力してください。例: example（.comではなく）');
+        return;
+      }
+
       // バリデーション
       const validationResult = domainBaseNameSchema.safeParse(baseName)
       if (!validationResult.success) {
@@ -314,6 +323,12 @@ export function DomainForm({ onResults }: DomainFormProps) {
                   value={baseNameInput}
                   onChange={(e) => setBaseNameInput(e.target.value)}
                   onKeyDown={handleBaseNameKeyDown}
+                  onKeyPress={(e) => {
+                    // Enterキーの二重処理防止
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                    }
+                  }}
                   className="flex-1"
                 />
                 <Button

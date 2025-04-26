@@ -23,7 +23,6 @@ export function WhoisModal({
     initialWhoisData || null
   )
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   // WHOISデータの取得
   const fetchWhoisData = async () => {
@@ -31,19 +30,23 @@ export function WhoisModal({
 
     setIsLoading(true)
     try {
+      console.log(`Fetching WHOIS data for domain: ${domain}`)
       const response = await fetch(
         `/api/domains/whois?domain=${encodeURIComponent(domain)}`
       )
 
       if (!response.ok) {
-        throw new Error('WHOIS情報の取得に失敗しました')
+        const errorData = await response.json().catch(() => ({}))
+        console.error('WHOIS API error response:', errorData)
+        throw new Error(`WHOIS 情報の取得に失敗しました: ${errorData.error || response.status}`)
       }
 
       const data = await response.json()
-      setWhoisData(data.whoisData)
+      console.log('WHOIS data received:', data)
+      setWhoisData(data.whoisData || 'WHOIS情報が空です。サーバー側の設定を確認してください。')
     } catch (error) {
       console.error('Error fetching WHOIS data:', error)
-      setWhoisData('WHOIS情報の取得中にエラーが発生しました。')
+      setWhoisData(`WHOIS 情報の取得中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
       setIsLoading(false)
     }
@@ -51,7 +54,6 @@ export function WhoisModal({
 
   // モーダルが開かれたときにWHOISデータを取得
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open)
     if (open && !whoisData) {
       fetchWhoisData()
     }
@@ -59,31 +61,6 @@ export function WhoisModal({
 
   // WHOIS情報を整形して表示
   const formatWhoisData = (data: string) => {
-    // WHOIS情報のラベルを日本語に変換するマッピング
-    const labelTranslations: Record<string, string> = {
-      'Domain Name': 'ドメイン名',
-      'Registry Domain ID': '登録ドメイン ID',
-      Registrar: '登録事業者',
-      'Registrar URL': '登録事業者 URL',
-      Registrant: '登録者',
-      'Registrant Name': '登録者名',
-      'Registrant Organization': '登録組織',
-      Admin: '管理者',
-      'Admin Name': '管理者名',
-      'Admin Organization': '管理者組織',
-      'Admin Email': '管理者メール',
-      'Creation Date': '作成日',
-      'Updated Date': '更新日',
-      'Registry Expiry Date': '有効期限',
-      'Name Server': 'ネームサーバー',
-      DNSSEC: 'DNSSEC',
-      'Domain Status': 'ドメイン状態',
-      'WHOIS Server': 'WHOISサーバー',
-      'Referral URL': '参照URL',
-      'URL of the ICANN WHOIS': 'ICANN WHOIS URL',
-      'Last update of WHOIS database': 'WHOIS DB 最終更新日',
-    }
-
     // ここで必要に応じてWHOIS情報を整形する
     return data.split('\n').map((line, index) => {
       // キーと値に分割
@@ -104,14 +81,8 @@ export function WhoisModal({
         ].some((k) => key.trim().includes(k))
 
       if (key && value) {
-        // キーを日本語に変換（部分一致による変換）
-        let translatedKey = key.trim()
-        for (const [engLabel, jpLabel] of Object.entries(labelTranslations)) {
-          if (translatedKey.includes(engLabel)) {
-            translatedKey = jpLabel
-            break
-          }
-        }
+        // 英語表示に統一（ラベル翻訳を無効化）
+        const translatedKey = key.trim()
 
         return (
           <div
@@ -128,7 +99,7 @@ export function WhoisModal({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <InfoIcon className="h-4 w-4 mr-1" />
@@ -137,7 +108,7 @@ export function WhoisModal({
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{domain} のWHOIS情報</DialogTitle>
+          <DialogTitle>{domain} の WHOIS情報</DialogTitle>
           <DialogDescription>
             ドメイン登録情報の詳細（登録者、期限、ネームサーバーなど）
           </DialogDescription>
@@ -153,7 +124,7 @@ export function WhoisModal({
             </div>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              WHOIS情報が見つかりませんでした
+              WHOIS 情報が見つかりませんでした
             </div>
           )}
         </div>
