@@ -10,6 +10,7 @@ const Home = () => {
   const [results, setResults] = useState<DomainStatus[]>([])
   const [currentYear, setCurrentYear] = useState<number>(0)
   const [activeTab, setActiveTab] = useState<string>('input')
+  const preserveFormState = true
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear())
