@@ -2,6 +2,8 @@ import { DomainStatus } from "@/types/domain";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { WhoisModal } from "./whois-modal";
+import { Badge } from "@/components/ui/badge";
 
 interface DomainGridProps {
   results: DomainStatus[];
@@ -21,9 +23,24 @@ export function DomainGrid({ results }: DomainGridProps) {
     <Card>
       <CardHeader>
         <CardTitle>ドメイン検索結果</CardTitle>
-        <CardDescription>
-          検索されたドメイン: {results.length}件
-          （利用可能: {available.length}件 / 登録済み: {unavailable.length}件 / エラー: {errors.length}件）
+        <CardDescription className="flex flex-wrap items-center gap-2 mt-1">
+          <span>検索されたドメイン: {results.length}件</span>
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
+              <CheckCircle className="h-3.5 w-3.5 mr-1" />
+              利用可能: {available.length}
+            </Badge>
+            <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50">
+              <XCircle className="h-3.5 w-3.5 mr-1" />
+              登録済み: {unavailable.length}
+            </Badge>
+            {errors.length > 0 && (
+              <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50">
+                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                エラー: {errors.length}
+              </Badge>
+            )}
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -41,10 +58,10 @@ export function DomainGrid({ results }: DomainGridProps) {
               <TableRow key={result.domain}>
                 <TableCell className="font-medium">{result.domain}</TableCell>
                 <TableCell>
-                  <div className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-green-600">利用可能</span>
-                  </div>
+                  <Badge variant="outline" className="bg-green-50 text-green-700">
+                    <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                    利用可能
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{result.message}</TableCell>
               </TableRow>
@@ -55,12 +72,17 @@ export function DomainGrid({ results }: DomainGridProps) {
               <TableRow key={result.domain}>
                 <TableCell className="font-medium">{result.domain}</TableCell>
                 <TableCell>
-                  <div className="flex items-center">
-                    <XCircle className="h-4 w-4 text-red-500 mr-2" />
-                    <span className="text-red-600">登録済み</span>
+                  <Badge variant="outline" className="bg-red-50 text-red-700">
+                    <XCircle className="h-3.5 w-3.5 mr-1" />
+                    登録済み
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{result.message}</span>
+                    <WhoisModal domain={result.domain} whoisData={result.whoisData} />
                   </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{result.message}</TableCell>
               </TableRow>
             ))}
             
@@ -69,10 +91,10 @@ export function DomainGrid({ results }: DomainGridProps) {
               <TableRow key={result.domain}>
                 <TableCell className="font-medium">{result.domain}</TableCell>
                 <TableCell>
-                  <div className="flex items-center">
-                    <AlertCircle className="h-4 w-4 text-amber-500 mr-2" />
-                    <span className="text-amber-600">エラー</span>
-                  </div>
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700">
+                    <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                    エラー
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{result.message}</TableCell>
               </TableRow>

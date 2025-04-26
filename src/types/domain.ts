@@ -3,6 +3,7 @@ export interface DomainStatus {
   available: boolean;
   message: string;
   error?: boolean;
+  whoisData?: string; // WHOIS情報の生テキスト
 }
 
 export interface DomainCheckResult {
