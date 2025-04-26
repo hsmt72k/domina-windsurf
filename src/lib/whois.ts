@@ -4,11 +4,18 @@ import { checkDNS } from './dns';
 import { DomainStatus } from '@/types/domain';
 
 // WHOISをPromise化
-const lookupWhois = promisify(whois.lookup);
+const lookupWhois = promisify<string, { timeout?: number }, string>(whois.lookup);
 
 // キャッシュ用のマップ
 const cache = new Map<string, { status: DomainStatus, timestamp: number }>();
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24時間
+
+// エラーインターフェース
+interface WhoisError {
+  message: string;
+  code?: string;
+  [key: string]: unknown;
+}
 
 /**
  * WHOISを使ってドメインの可用性をチェック
@@ -37,8 +44,9 @@ export async function checkDomainAvailability(domain: string): Promise<DomainSta
     // キャッシュに保存
     cache.set(domain, { status, timestamp: Date.now() });
     return status;
-  } catch (error) {
-    console.log(`WHOIS failed for ${domain}: ${error.message}`);
+  } catch (error: unknown) {
+    const whoisError = error as WhoisError;
+    console.log(`WHOIS failed for ${domain}: ${whoisError.message}`);
     
     // WHOISが失敗したらDNSフォールバック
     try {
@@ -51,7 +59,7 @@ export async function checkDomainAvailability(domain: string): Promise<DomainSta
       
       cache.set(domain, { status, timestamp: Date.now() });
       return status;
-    } catch (dnsError) {
+    } catch {
       // 両方失敗
       return {
         domain,
@@ -108,9 +116,6 @@ function isAvailableFromWhoisResult(result: string, domain: string): boolean {
       return false;
     }
   }
-  
-  // TLDに応じた特殊処理
-  const tld = domain.substring(domain.lastIndexOf('.'));
   
   // デフォルト: ドメイン名が結果に含まれていれば登録済みと判断
   return !resultLower.includes(domain.toLowerCase());
