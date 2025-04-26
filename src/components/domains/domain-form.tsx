@@ -181,10 +181,12 @@ export function DomainForm({ onResults }: DomainFormProps) {
             />
           </div>
           <Button
-            variant="outline"
+            type="button"
+            variant="secondary"
+            size="sm"
             onClick={generateSuggestions}
             disabled={isGeneratingSuggestions || !businessIdea.trim()}
-            className="mt-6"
+            className="hover:cursor-pointer mt-6"
           >
             {isGeneratingSuggestions ? (
               <>
@@ -211,7 +213,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
                     variant="secondary"
                     size="sm"
                     onClick={() => selectSuggestion(suggestion)}
-                    className="h-7 px-2"
+                    className="h-7 px-2 hover:cursor-pointer"
                   >
                     {baseName}
                   </Button>
@@ -241,6 +243,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
                 <Button
                   type="button"
                   variant="outline"
+                  className="hover:cursor-pointer"
                   onClick={() => {
                     if (baseNameInput.trim()) {
                       addBaseName(baseNameInput.trim())
@@ -262,17 +265,21 @@ export function DomainForm({ onResults }: DomainFormProps) {
                       className="flex items-center gap-1 h-6"
                     >
                       {baseName.value}
-                      <X
-                        className="h-3 w-3 cursor-pointer"
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-3 w-3 p-0 hover:bg-transparent hover:cursor-pointer"
                         onClick={() => removeBaseName(baseName.id)}
-                      />
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
                     </Badge>
                   ))}
                   {baseNames.length > 0 && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 px-2 text-xs"
+                      className="h-6 px-2 text-xs hover:cursor-pointer"
                       onClick={() => setBaseNames([])}
                     >
                       クリア
@@ -299,7 +306,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full hover:cursor-pointer" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

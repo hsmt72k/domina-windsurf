@@ -79,7 +79,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
         <div className="text-sm font-medium">チェックするTLDを選択</div>
         <Dialog onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="hover:cursor-pointer">
               <Settings2 className="h-4 w-4 mr-1" />
               TLDを変更
             </Button>
@@ -98,6 +98,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                   variant="outline" 
                   size="sm" 
                   onClick={handleClear}
+                  className="hover:cursor-pointer"
                 >
                   すべて解除
                 </Button>
@@ -105,6 +106,7 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                   variant="outline" 
                   size="sm" 
                   onClick={handleSelectAll}
+                  className="hover:cursor-pointer"
                 >
                   すべて選択
                 </Button>
@@ -125,12 +127,14 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                             handleTldChange(tld, checked as boolean)
                           }
                         />
-                        <div 
-                          className="text-sm cursor-pointer" 
+                        <Button 
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 p-0 text-sm hover:cursor-pointer hover:bg-transparent"
                           onClick={() => handleTldChange(tld, !tempSelectedTlds.includes(tld))}
                         >
                           {tld}
-                        </div>
+                        </Button>
                       </div>
                     ))}
                   </div>
@@ -141,10 +145,10 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
             <DialogFooter className="flex justify-between sm:justify-between">
               <div className="flex gap-2">
                 <DialogClose asChild>
-                  <Button variant="secondary" size="sm">キャンセル</Button>
+                  <Button variant="secondary" size="sm" className="hover:cursor-pointer">キャンセル</Button>
                 </DialogClose>
                 <DialogClose asChild>
-                  <Button size="sm" onClick={handleApply}>適用 ({tempSelectedTlds.length})</Button>
+                  <Button size="sm" onClick={handleApply} className="hover:cursor-pointer">適用 ({tempSelectedTlds.length})</Button>
                 </DialogClose>
               </div>
             </DialogFooter>
@@ -158,16 +162,20 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
             {selectedTlds.map((tld) => (
               <Badge key={tld} variant="secondary" className="flex items-center gap-1 h-6">
                 {tld}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-3 w-3 p-0 hover:bg-transparent hover:cursor-pointer"
                   onClick={() => handleRemoveTld(tld)}
-                />
+                >
+                  <X className="h-3 w-3" />
+                </Button>
               </Badge>
             ))}
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-6 px-2 text-xs" 
+              className="h-6 px-2 text-xs hover:cursor-pointer" 
               onClick={handleClearAll}
             >
               クリア
