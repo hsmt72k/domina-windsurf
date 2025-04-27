@@ -14,9 +14,17 @@ export function ThemeToggle({ isHeaderTransparent = false }: ThemeToggleProps) {
   const { setTheme } = useTheme()
   const [isDarkMode] = useAtom(isDarkModeAtom)
   const handleRef = React.useRef<HTMLDivElement>(null)
+  const [isMounted, setIsMounted] = React.useState(false)
+
+  // クライアントサイドでのみ実行されるようにする
+  React.useEffect(() => {
+    setIsMounted(true)
+  }, [])
   
   // UseEffectでスイッチハンドルのスタイルを直接操作
   React.useEffect(() => {
+    if (!isMounted) return;
+    
     const handle = handleRef.current
     if (!handle) return
     
@@ -27,11 +35,21 @@ export function ThemeToggle({ isHeaderTransparent = false }: ThemeToggleProps) {
     setTimeout(() => {
       handle.style.transform = isDarkMode ? "translateX(28px)" : "translateX(0px)"
     }, 0)
-  }, [isDarkMode])
+  }, [isDarkMode, isMounted])
 
   const handleThemeChange = () => {
     const newTheme = isDarkMode ? "light" : "dark"
     setTheme(newTheme)
+  }
+  
+  // サーバーサイドレンダリング時はシンプルな表示を返す
+  if (!isMounted) {
+    return (
+      <div 
+        className="relative inline-block w-[56px] h-[28px] rounded-full cursor-pointer opacity-0"
+        aria-hidden="true"
+      />
+    );
   }
 
   return (
@@ -40,8 +58,8 @@ export function ThemeToggle({ isHeaderTransparent = false }: ThemeToggleProps) {
       style={{
         backgroundColor: isHeaderTransparent
           ? "rgba(255, 255, 255, 0.2)"
-          : isDarkMode
-            ? "rgb(55, 65, 81)"
+          : isDarkMode 
+            ? "rgb(55, 65, 81)" 
             : "rgb(229, 231, 235)",
         transition: "background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
       }}
