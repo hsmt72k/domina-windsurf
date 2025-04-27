@@ -45,16 +45,16 @@ export function DomainGrid({ results }: DomainGridProps) {
         <CardDescription className="flex flex-wrap items-center gap-3 mt-2">
           <span>検索されたドメイン: {results.length}件</span>
           <div className="flex flex-wrap gap-2 mt-1">
-            <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 px-3 py-1">
+            <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 dark:bg-[#223042]/60 dark:text-[#A8E890]/90 dark:hover:bg-[#223042]/70 px-3 py-1">
               <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
               利用可能: {available.length}
             </Badge>
-            <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50 px-3 py-1">
+            <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50 dark:bg-[#2A1E28]/60 dark:text-[#F87171]/90 dark:hover:bg-[#2A1E28]/70 px-3 py-1">
               <XCircle className="h-3.5 w-3.5 mr-1.5" />
               登録済み: {unavailable.length}
             </Badge>
             {errors.length > 0 && (
-              <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50 px-3 py-1">
+              <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50 dark:bg-[#2A2420]/60 dark:text-[#FBBF24]/90 dark:hover:bg-[#2A2420]/70 px-3 py-1">
                 <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
                 エラー: {errors.length}
               </Badge>
@@ -74,10 +74,10 @@ export function DomainGrid({ results }: DomainGridProps) {
           <TableBody>
             {/* 利用可能なドメインを先に表示 */}
             {available.map((result) => (
-              <TableRow key={result.domain} className="hover:bg-green-50/30">
+              <TableRow key={result.domain} className="hover:bg-green-50/30 dark:hover:bg-[#1F3A2C]/30">
                 <TableCell className="font-medium py-3.5 pl-6">{result.domain}</TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="bg-green-50 text-green-700 px-2.5">
+                  <Badge variant="outline" className="bg-green-50 text-green-700 px-2.5 dark:bg-[#223042]/60 dark:text-[#A8E890]/90 dark:hover:bg-[#223042]/70">
                     <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                     利用可能
                   </Badge>
@@ -90,10 +90,10 @@ export function DomainGrid({ results }: DomainGridProps) {
             
             {/* 利用不可能なドメイン */}
             {unavailable.map((result) => (
-              <TableRow key={result.domain} className="hover:bg-red-50/20">
+              <TableRow key={result.domain} className="hover:bg-red-50/20 dark:hover:bg-[#3A2027]/30">
                 <TableCell className="font-medium py-3.5 pl-6">{result.domain}</TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="bg-red-50 text-red-700 px-2.5">
+                  <Badge variant="outline" className="bg-red-50 text-red-700 px-2.5 dark:bg-[#2A1E28]/60 dark:text-[#F87171]/90 dark:hover:bg-[#2A1E28]/70">
                     <XCircle className="h-3.5 w-3.5 mr-1.5" />
                     登録済み
                   </Badge>
@@ -109,10 +109,10 @@ export function DomainGrid({ results }: DomainGridProps) {
             
             {/* エラーのあるドメイン */}
             {errors.map((result) => (
-              <TableRow key={result.domain} className="hover:bg-amber-50/20">
+              <TableRow key={result.domain} className="hover:bg-amber-50/20 dark:hover:bg-[#382918]/30">
                 <TableCell className="font-medium py-3.5 pl-6">{result.domain}</TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 px-2.5">
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 px-2.5 dark:bg-[#2A2420]/60 dark:text-[#FBBF24]/90 dark:hover:bg-[#2A2420]/70">
                     <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
                     エラー
                   </Badge>

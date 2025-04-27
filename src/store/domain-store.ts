@@ -22,3 +22,6 @@ export const activeTabAtom = atomWithStorage<string>('domina-activeTab', 'input'
 // ローディング状態（永続化する必要がないのでatomのみ）
 export const isLoadingAtom = atom<boolean>(false)
 export const isGeneratingSuggestionsAtom = atom<boolean>(false)
+
+// テーマ設定
+export const isDarkModeAtom = atomWithStorage<boolean>('domina-darkMode', false)

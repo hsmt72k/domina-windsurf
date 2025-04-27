@@ -324,7 +324,7 @@
   "workbench.layoutControl.enabled": true,
   "workbench.list.horizontalScrolling": true,
   "workbench.list.defaultFindMode": "filter",
-  "workbench.preferredLightColorTheme": "JetBrains Rider Dark Theme",
+  "workbench.preferredLightColorTheme": "JetBrains New Dark",
   "workbench.settings.openDefaultSettings": true,
   "workbench.sideBar.location": "right",
   "workbench.startupEditor": "newUntitledFile",

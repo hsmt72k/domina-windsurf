@@ -101,7 +101,7 @@ export function WhoisModal({
   return (
     <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="hover:cursor-pointer">
           <InfoIcon className="h-4 w-4 mr-1" />
           WHOIS 情報
         </Button>
