@@ -287,10 +287,10 @@ export function DomainForm({ onResults }: DomainFormProps) {
 
           {/* 提案されたドメイン名 */}
           {suggestions.length > 0 && (
-            <Card className="border border-amber-100 bg-amber-50/50">
+            <Card className="border border-amber-100 bg-amber-50/50 dark:border-amber-700/30 dark:bg-amber-900/20">
               <CardContent className="p-4">
-                <div className="text-sm font-medium mb-3 text-amber-700 flex items-center">
-                  <Sparkles className="h-4 w-4 mr-1.5 text-amber-500" />
+                <div className="text-sm font-medium mb-3 text-amber-700 dark:text-amber-300/90 flex items-center">
+                  <Sparkles className="h-4 w-4 mr-1.5 text-amber-500 dark:text-amber-400/90" />
                   AI提案のドメイン名
                 </div>
                 <div className="flex flex-wrap gap-2 min-h-[38px]">
@@ -298,7 +298,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
                     <Badge
                       key={index}
                       variant="outline"
-                      className="bg-white border-amber-200 hover:bg-amber-100 cursor-pointer transition-colors flex items-center gap-1 h-8 pr-3 pl-3"
+                      className="bg-white border-amber-200 hover:bg-amber-100 cursor-pointer transition-colors flex items-center gap-1 h-8 pr-3 pl-3 dark:bg-[#1E293B]/60 dark:border-amber-500/30 dark:hover:bg-amber-900/30 dark:text-amber-200"
                       onClick={() => selectSuggestion(suggestion)}
                     >
                       <span>{suggestion}</span>
