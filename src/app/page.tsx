@@ -83,14 +83,18 @@ export default function Home() {
             <div className="flex flex-col">
               <h1
                 className={`text-xl font-bold tracking-tight ${
-                  isHeaderTransparent ? 'text-white' : 'text-gray-900 dark:text-white'
+                  isHeaderTransparent
+                    ? 'text-white'
+                    : 'text-gray-900 dark:text-white'
                 }`}
               >
                 Domina
               </h1>
               <p
                 className={`text-xs ${
-                  isHeaderTransparent ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
+                  isHeaderTransparent
+                    ? 'text-white/80'
+                    : 'text-gray-500 dark:text-gray-400'
                 }`}
               >
                 ドメイン検索ツール
@@ -100,7 +104,9 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <div
               className={`text-sm ${
-                isHeaderTransparent ? 'text-white/90' : 'text-gray-600 dark:text-gray-300'
+                isHeaderTransparent
+                  ? 'text-white/90'
+                  : 'text-gray-600 dark:text-gray-300'
               }`}
             >
               <span className="hidden md:inline">快適な</span>ドメイン検索体験
@@ -119,7 +125,9 @@ export default function Home() {
           <div className="flex flex-col gap-7 text-center items-center">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
               理想的なドメイン名を
-              <span className="text-amber-300 dark:text-[oklch(0.89_0.1126_98.29)]">見つけよう</span>
+              <span className="text-amber-300 dark:text-[oklch(0.89_0.1126_98.29)]">
+                見つけよう
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-white/90 dark:text-gray-200 max-w-2xl leading-relaxed">
               ビジネスアイデアからドメイン名を生成し、利用可能なドメインをチェック。AI
@@ -143,7 +151,10 @@ export default function Home() {
         <div className="mt-8 p-6 bg-white dark:bg-[#0F172A] rounded-xl border border-gray-100 dark:border-[#1E293B] shadow-sm">
           <Tabs defaultValue="results" className="w-full">
             <TabsList className="mb-5 bg-gray-100 dark:bg-[#1E293B]/80">
-              <TabsTrigger value="results" className="text-base px-5 py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-[#0F172A]">
+              <TabsTrigger
+                value="results"
+                className="text-base px-5 py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-[#0F172A]"
+              >
                 検索結果{' '}
                 {results.length > 0 ? (
                   <Badge
@@ -172,7 +183,7 @@ export default function Home() {
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
             title="AIによる提案"
-            description="Gemini AIを活用して、ビジネスアイデアに最適な創造的なドメイン名を提案します。"
+            description="Gemini AI を活用して、ビジネスアイデアに最適な創造的なドメイン名を提案します。"
             icon={
               <div className="bg-blue-100 p-3.5 rounded-full text-blue-600 dark:bg-[#223A60]/40 dark:text-[#93C5FD]">
                 🧠
@@ -189,8 +200,8 @@ export default function Home() {
             }
           />
           <FeatureCard
-            title="WHOIS情報の表示"
-            description="登録済みドメインの詳細なWHOIS情報をわかりやすく日本語で表示します。"
+            title="WHOIS 情報の表示"
+            description="登録済みドメインの詳細な WHOIS 情報をわかりやすく日本語で表示します。"
             icon={
               <div className="bg-purple-100 p-3.5 rounded-full text-purple-600 dark:bg-[#372554]/40 dark:text-[#C4B5FD]">
                 🔍
@@ -226,7 +237,9 @@ function FeatureCard({
         {icon}
         <div>
           <h3 className="font-medium text-lg mb-2">{title}</h3>
-          <p className="text-gray-600 text-sm dark:text-gray-400">{description}</p>
+          <p className="text-gray-600 text-sm dark:text-gray-400">
+            {description}
+          </p>
         </div>
       </div>
     </div>
