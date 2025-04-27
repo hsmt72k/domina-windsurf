@@ -47,16 +47,16 @@ export function DomainGrid({ results }: DomainGridProps) {
           <div className="flex flex-wrap gap-2 mt-1">
             <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 dark:bg-[#223042]/60 dark:text-[#A8E890]/90 dark:hover:bg-[#223042]/70 px-3 py-1">
               <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
-              利用可能: {available.length}
+              利用可能: <span className="inline-flex items-center justify-center bg-green-200/80 dark:bg-green-900/40 text-green-800 dark:text-green-300 rounded-full w-5 h-5 text-xs font-medium ml-1">{available.length}</span>
             </Badge>
             <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50 dark:bg-[#2A1E28]/60 dark:text-[#F87171]/90 dark:hover:bg-[#2A1E28]/70 px-3 py-1">
               <XCircle className="h-3.5 w-3.5 mr-1.5" />
-              登録済み: {unavailable.length}
+              登録済み: <span className="inline-flex items-center justify-center bg-red-200/80 dark:bg-red-900/40 text-red-800 dark:text-red-300 rounded-full w-5 h-5 text-xs font-medium ml-1">{unavailable.length}</span>
             </Badge>
             {errors.length > 0 && (
               <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50 dark:bg-[#2A2420]/60 dark:text-[#FBBF24]/90 dark:hover:bg-[#2A2420]/70 px-3 py-1">
                 <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
-                エラー: {errors.length}
+                エラー: <span className="inline-flex items-center justify-center bg-amber-200/80 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 rounded-full w-5 h-5 text-xs font-medium ml-1">{errors.length}</span>
               </Badge>
             )}
           </div>
