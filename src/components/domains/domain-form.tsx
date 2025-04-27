@@ -182,8 +182,10 @@ export function DomainForm({ onResults }: DomainFormProps) {
     try {
       // すでにTLDが含まれているかチェック
       if (baseName.includes('.')) {
-        toast.error('TLDを含めないドメイン名のベース部分のみを入力してください。例: example（.comではなく）');
-        return;
+        toast.error(
+          'TLDを含めないドメイン名のベース部分のみを入力してください。例: example（.comではなく）'
+        )
+        return
       }
 
       // バリデーション
@@ -237,7 +239,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
           {/* ビジネスアイデア入力 */}
           <div className="space-y-3">
             <div className="text-sm font-medium text-gray-700">
-              ビジネスアイデア
+              アイデアからドメイン名を提案
             </div>
             <div className="space-y-3">
               <div className="relative">
@@ -285,8 +287,8 @@ export function DomainForm({ onResults }: DomainFormProps) {
             </div>
           </div>
 
-          {/* 提案されたドメイン名 */}
-          {suggestions.length > 0 && (
+          {/* 提案されたドメイン名（ローディング中はスケルトン表示） */}
+          {(suggestions.length > 0 || isGeneratingSuggestions) && (
             <Card className="border border-amber-100 bg-amber-50/50 dark:border-amber-700/30 dark:bg-amber-900/20">
               <CardContent className="p-4">
                 <div className="text-sm font-medium mb-3 text-amber-700 dark:text-amber-300/90 flex items-center">
@@ -294,17 +296,35 @@ export function DomainForm({ onResults }: DomainFormProps) {
                   AI提案のドメイン名
                 </div>
                 <div className="flex flex-wrap gap-2 min-h-[38px]">
-                  {suggestions.map((suggestion, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="bg-white border-amber-200 hover:bg-amber-100 cursor-pointer transition-colors flex items-center gap-1 h-8 pr-3 pl-3 dark:bg-[#1E293B]/60 dark:border-amber-500/30 dark:hover:bg-amber-900/30 dark:text-amber-200"
-                      onClick={() => selectSuggestion(suggestion)}
-                    >
-                      <span>{suggestion}</span>
-                      <CornerDownRight className="h-3 w-3 ml-1.5 text-amber-500" />
-                    </Badge>
-                  ))}
+                  {isGeneratingSuggestions ? (
+                    // スケルトンローディング表示（波打つエフェクト）
+                    <>
+                      {Array(5)
+                        .fill(0)
+                        .map((_, index) => (
+                          <div
+                            key={`skeleton-${index}`}
+                            className="h-8 rounded-full relative overflow-hidden px-4 inline-flex items-center shimmer-animation"
+                            style={{
+                              width: `${Math.floor(80 + Math.random() * 80)}px`,
+                            }}
+                          />
+                        ))}
+                    </>
+                  ) : (
+                    // 通常の提案表示
+                    suggestions.map((suggestion, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="bg-white border-amber-200 hover:bg-amber-100 cursor-pointer transition-colors flex items-center gap-1 h-8 pr-3 pl-3 dark:bg-[#1E293B]/60 dark:border-amber-500/30 dark:hover:bg-amber-900/30 dark:text-amber-200"
+                        onClick={() => selectSuggestion(suggestion)}
+                      >
+                        <span>{suggestion.split('.')[0]}</span>
+                        <CornerDownRight className="h-3 w-3 ml-1.5 text-amber-500" />
+                      </Badge>
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>

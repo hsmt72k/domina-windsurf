@@ -214,7 +214,7 @@ export default function Home() {
       {/* フッター */}
       <footer className="mt-20 py-6 bg-gray-50 border-t">
         <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-          <p> {currentYear} Domina Windsurf - ドメイン検索ツール</p>
+          <p>&copy; {currentYear} Domina - ドメイン検索ツール</p>
         </div>
       </footer>
     </div>

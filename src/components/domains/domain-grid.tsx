@@ -75,15 +75,21 @@ export function DomainGrid({ results }: DomainGridProps) {
             {/* 利用可能なドメインを先に表示 */}
             {available.map((result) => (
               <TableRow key={result.domain} className="hover:bg-green-50/30 dark:hover:bg-[#1F3A2C]/30">
-                <TableCell className="font-medium py-3.5 pl-6">{result.domain}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="bg-green-50 text-green-700 px-2.5 dark:bg-[#223042]/60 dark:text-[#A8E890]/90 dark:hover:bg-[#223042]/70">
-                    <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
-                    利用可能
-                  </Badge>
+                <TableCell className="font-medium py-4 pl-6">
+                  <div className="h-8 flex items-center">{result.domain}</div>
                 </TableCell>
-                <TableCell className="flex items-center justify-between pr-6">
-                  <span className="text-muted-foreground">{result.message}</span>
+                <TableCell className="py-4">
+                  <div className="h-8 flex items-center">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 px-2.5 dark:bg-[#223042]/60 dark:text-[#A8E890]/90 dark:hover:bg-[#223042]/70">
+                      <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
+                      利用可能
+                    </Badge>
+                  </div>
+                </TableCell>
+                <TableCell className="pr-6 py-4">
+                  <div className="h-8 flex items-center">
+                    <span className="text-muted-foreground">{result.message}</span>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -91,15 +97,19 @@ export function DomainGrid({ results }: DomainGridProps) {
             {/* 利用不可能なドメイン */}
             {unavailable.map((result) => (
               <TableRow key={result.domain} className="hover:bg-red-50/20 dark:hover:bg-[#3A2027]/30">
-                <TableCell className="font-medium py-3.5 pl-6">{result.domain}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="bg-red-50 text-red-700 px-2.5 dark:bg-[#2A1E28]/60 dark:text-[#F87171]/90 dark:hover:bg-[#2A1E28]/70">
-                    <XCircle className="h-3.5 w-3.5 mr-1.5" />
-                    登録済み
-                  </Badge>
+                <TableCell className="font-medium py-4 pl-6">
+                  <div className="h-8 flex items-center">{result.domain}</div>
                 </TableCell>
-                <TableCell className="pr-6">
-                  <div className="flex items-center justify-between">
+                <TableCell className="py-4">
+                  <div className="h-8 flex items-center">
+                    <Badge variant="outline" className="bg-red-50 text-red-700 px-2.5 dark:bg-[#2A1E28]/60 dark:text-[#F87171]/90 dark:hover:bg-[#2A1E28]/70">
+                      <XCircle className="h-3.5 w-3.5 mr-1.5" />
+                      登録済み
+                    </Badge>
+                  </div>
+                </TableCell>
+                <TableCell className="pr-6 py-4">
+                  <div className="h-8 flex items-center justify-between w-full">
                     <span className="text-muted-foreground">{result.message}</span>
                     <WhoisModal domain={result.domain} whoisData={result.whoisData} />
                   </div>
@@ -110,14 +120,22 @@ export function DomainGrid({ results }: DomainGridProps) {
             {/* エラーのあるドメイン */}
             {errors.map((result) => (
               <TableRow key={result.domain} className="hover:bg-amber-50/20 dark:hover:bg-[#382918]/30">
-                <TableCell className="font-medium py-3.5 pl-6">{result.domain}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 px-2.5 dark:bg-[#2A2420]/60 dark:text-[#FBBF24]/90 dark:hover:bg-[#2A2420]/70">
-                    <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
-                    エラー
-                  </Badge>
+                <TableCell className="font-medium py-4 pl-6">
+                  <div className="h-8 flex items-center">{result.domain}</div>
                 </TableCell>
-                <TableCell className="text-muted-foreground pr-6">{result.message}</TableCell>
+                <TableCell className="py-4">
+                  <div className="h-8 flex items-center">
+                    <Badge variant="outline" className="bg-amber-50 text-amber-700 px-2.5 dark:bg-[#2A2420]/60 dark:text-[#FBBF24]/90 dark:hover:bg-[#2A2420]/70">
+                      <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
+                      エラー
+                    </Badge>
+                  </div>
+                </TableCell>
+                <TableCell className="pr-6 py-4">
+                  <div className="h-8 flex items-center">
+                    <span className="text-muted-foreground">{result.message}</span>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
