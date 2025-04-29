@@ -2,7 +2,7 @@ import * as dns from 'dns2';
 
 interface DNSResult {
   exists: boolean;
-  records?: any[];
+  records?: dns.Answer[];
 }
 
 /**
@@ -10,7 +10,6 @@ interface DNSResult {
  * WHOISが失敗した場合のフォールバックメカニズム
  */
 export async function checkDNS(domain: string): Promise<DNSResult> {
-  const resolver = new dns.Packet();
   const recordTypes = ['A', 'MX', 'TXT'];
   
   try {
@@ -34,9 +33,10 @@ export async function checkDNS(domain: string): Promise<DNSResult> {
     
     // レコードが見つからなければ、ドメインは未登録
     return { exists: false };
-  } catch (error) {
+  } catch (error: unknown) {
     // DNS解決エラー - 通常はNXDOMAIN (存在しない)
-    if (error.code === 'ENOTFOUND' || error.code === 'ENODATA') {
+    if (error && typeof error === 'object' && 'code' in error && 
+        (error.code === 'ENOTFOUND' || error.code === 'ENODATA')) {
       return { exists: false };
     }
     

@@ -1,7 +1,7 @@
 "use client"
 
 import { useAtom } from "jotai"
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, useCallback } from "react"
 import { isDarkModeAtom } from "@/store/domain-store"
 
 type Theme = "dark" | "light" | "system"
@@ -34,7 +34,7 @@ export function ThemeProvider({
   const [, setIsDarkMode] = useAtom(isDarkModeAtom)
   const [theme, setThemeState] = useState<Theme>(defaultTheme)
 
-  const applyTheme = (newTheme: Theme) => {
+  const applyTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme)
     const root = window.document.documentElement
 
@@ -60,7 +60,7 @@ export function ThemeProvider({
         root.classList.remove("no-transitions")
       }, 0)
     }
-  }
+  }, [disableTransitionOnChange, attribute])
 
   const setTheme = (newTheme: Theme) => {
     if (newTheme === "system" && enableSystem) {
