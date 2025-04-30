@@ -293,7 +293,7 @@ export function DomainForm({ onResults }: DomainFormProps) {
               <CardContent className="p-4">
                 <div className="text-sm font-medium mb-3 text-amber-700 dark:text-amber-300/90 flex items-center">
                   <Sparkles className="h-4 w-4 mr-1.5 text-amber-500 dark:text-amber-400/90" />
-                  AI提案のドメイン名
+                  AI 提案のドメイン名
                 </div>
                 <div className="flex flex-wrap gap-2 min-h-[38px]">
                   {isGeneratingSuggestions ? (

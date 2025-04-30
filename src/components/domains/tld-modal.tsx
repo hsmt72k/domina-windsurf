@@ -87,12 +87,12 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
               className="hover:cursor-pointer"
             >
               <Settings2 className="h-4 w-4 mr-1" />
-              TLDを変更
+              TLD を変更
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[550px]">
             <DialogHeader>
-              <DialogTitle>TLDを選択</DialogTitle>
+              <DialogTitle>TLD を選択</DialogTitle>
             </DialogHeader>
 
             <div className="flex justify-between items-center py-2">
@@ -174,7 +174,13 @@ export function TldModal({ selectedTlds, onChange }: TldModalProps) {
                     onClick={handleApply}
                     className="hover:cursor-pointer"
                   >
-                    適用 <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0 h-4">{tempSelectedTlds.length}</Badge>
+                    適用{' '}
+                    <Badge
+                      variant="secondary"
+                      className="ml-1 text-xs px-1.5 py-0 h-4"
+                    >
+                      {tempSelectedTlds.length}
+                    </Badge>
                   </Button>
                 </DialogClose>
               </div>
